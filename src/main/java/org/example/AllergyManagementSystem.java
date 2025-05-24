@@ -39,7 +39,7 @@ public class AllergyManagementSystem extends JFrame {
         tabbedPane.setOpaque(false); // 使标签页透明
 
         // 添加用户登录面板
-        JPanel loginPanel = new BackgroundPanel(new Color(0, 0,0, 80)); // 半透明黑色背景
+        JPanel loginPanel = new BackgroundPanel(new Color(30, 30, 30, 30)); // 半透明黑色背景
         loginPanel.setLayout(new CardLayout());
 
         JPanel loginContent = createLoginPanel(); // 获取你原本创建的登录界面内容
