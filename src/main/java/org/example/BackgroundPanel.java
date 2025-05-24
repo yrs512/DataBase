@@ -7,8 +7,19 @@ class BackgroundPanel extends JPanel {
     private Image backgroundImage;
     private float overlayAlpha = 0.3f; // 调整遮罩透明度
 
+    public BackgroundPanel() {
+        this((Image) null); // 表示不使用图片
+    }
+
     public BackgroundPanel(Image backgroundImage) {
         this.backgroundImage = backgroundImage;
+        setLayout(new BorderLayout());
+    }
+
+    public BackgroundPanel(Color backgroundColor) {
+        this.backgroundImage = null;
+        this.setOpaque(true);
+        this.setBackground(backgroundColor);
         setLayout(new BorderLayout());
     }
 
@@ -32,6 +43,10 @@ class BackgroundPanel extends JPanel {
                     0, getHeight(), new Color(0, 0, 0, 100));
             g2d.setPaint(gradient);
             g2d.fillRect(0, 0, getWidth(), getHeight());
+        } else {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(getBackground());
+            g2.fillRect(0, 0, getWidth(), getHeight());
         }
     }
 

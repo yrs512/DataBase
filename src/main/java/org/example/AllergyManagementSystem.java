@@ -18,7 +18,7 @@ public class AllergyManagementSystem extends JFrame {
 
         // 加载背景图片 (图片放在项目的resources文件夹中)
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/Background.jpg")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "背景图片加载失败: " + e.getMessage());
             backgroundImage = null;
@@ -29,27 +29,95 @@ public class AllergyManagementSystem extends JFrame {
     }
 
     private void initComponents() {
-        // 使用自定义背景的面板作为内容面板
-        BackgroundPanel backgroundPanel = new BackgroundPanel(backgroundImage);
+        // 使用纯色蓝色背景面板
+        BackgroundPanel backgroundPanel = new BackgroundPanel(); // 不使用图片
+        backgroundPanel.setBackground(new Color(70, 130, 180)); // 深蓝色
+        backgroundPanel.setOpaque(true); // 设置为不透明才能显示颜色
         backgroundPanel.setLayout(new BorderLayout());
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setOpaque(false); // 使标签页透明
 
         // 添加用户登录面板
-        JPanel loginPanel = createLoginPanel();
-        loginPanel.setOpaque(false); // 使面板透明
-        tabbedPane.addTab("用户登录", loginPanel);
+        JPanel loginPanel = new BackgroundPanel(new Color(0, 0,0, 80)); // 半透明黑色背景
+        loginPanel.setLayout(new CardLayout());
 
-        // 可以添加其他功能模块面板
-        // tabbedPane.addTab("其他模块", otherPanel);
+        JPanel loginContent = createLoginPanel(); // 获取你原本创建的登录界面内容
+        loginPanel.add(loginContent, BorderLayout.CENTER);
+
+        tabbedPane.addTab("用户登录", loginPanel);
 
         backgroundPanel.add(tabbedPane, BorderLayout.CENTER);
         setContentPane(backgroundPanel); // 设置内容面板为我们的背景面板
 
         // 设置标签页字体和颜色
-        tabbedPane.setFont(new Font("微软雅黑", Font.BOLD, 16));
+        tabbedPane.setFont(new Font("微软雅黑", Font.BOLD, 18));
         tabbedPane.setForeground(Color.WHITE);
+
+        // 可以添加其他功能模块面板
+        // tabbedPane.addTab("其他模块", otherPanel);
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("微软雅黑", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setBackground(new Color(0, 123, 255)); // 蓝色背景
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        button.setContentAreaFilled(false); // 关闭默认填充
+        button.setOpaque(false); // 使用自定义绘制
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // 自定义绘制圆角按钮
+        button.setUI(new javax.swing.plaf.basic.BasicButtonUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                AbstractButton b = (AbstractButton) c;
+                ButtonModel model = b.getModel();
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                int width = c.getWidth();
+                int height = c.getHeight();
+
+                if (model.isArmed()) {
+                    g2.setColor(new Color(0, 150, 255)); // 按下时颜色变浅
+                } else {
+                    g2.setColor(new Color(0, 123, 255)); // 正常状态颜色
+                }
+
+                g2.fillRoundRect(0, 0, width - 1, height - 1, 20, 20); // 圆角矩形
+
+                // 绘制文字
+                g2.setColor(Color.WHITE);
+                g2.setFont(button.getFont());
+                FontMetrics fm = g2.getFontMetrics();
+                int tw = fm.stringWidth(b.getText());
+                int th = fm.getHeight();
+                int tx = (width - tw) / 2;
+                int ty = (height + th) / 2 - fm.getDescent();
+                g2.drawString(b.getText(), tx, ty);
+
+                g2.dispose();
+            }
+        });
+
+        // 鼠标悬停变色
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(0, 150, 255));
+                button.repaint();
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(0, 123, 255));
+                button.repaint();
+            }
+        });
+
+        return button;
     }
 
     // 创建带统一边框的面板
@@ -62,7 +130,7 @@ public class AllergyManagementSystem extends JFrame {
 
     private JPanel createLoginPanel() {
         // 单独加载登录界面背景图（假设放在 resources/login_background.jpg）
-        Image loginBackground = new ImageIcon(getClass().getResource("/Background.jpg")).getImage();
+        Image loginBackground = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
         BackgroundPanel panel = new BackgroundPanel(loginBackground);
         panel.setLayout(new CardLayout());
 
@@ -74,7 +142,7 @@ public class AllergyManagementSystem extends JFrame {
 
         // 标题标签 - 密码登录
         JLabel titleLabel1 = new JLabel("密码登录", SwingConstants.CENTER);
-        titleLabel1.setFont(new Font("微软雅黑", Font.BOLD, 24));
+        titleLabel1.setFont(new Font("微软雅黑", Font.BOLD, 48));
         titleLabel1.setForeground(new Color(255, 255, 255));
         titleLabel1.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         gbc.gridx = 0;
@@ -85,6 +153,9 @@ public class AllergyManagementSystem extends JFrame {
         // 电话号码输入
         JLabel phoneLabel1 = new JLabel("电话号码:");
         JTextField phoneField1 = new JTextField(20);
+        phoneLabel1.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        phoneLabel1.setForeground(Color.WHITE); // 设置文字颜色为白色
+        phoneLabel1.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -95,6 +166,9 @@ public class AllergyManagementSystem extends JFrame {
         // 密码输入
         JLabel passwordLabel = new JLabel("密码:");
         JPasswordField passwordField = new JPasswordField(20);
+        passwordLabel.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        passwordLabel.setForeground(Color.WHITE); // 设置文字颜色为白色
+        passwordLabel.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
         gbc.gridx = 0;
         gbc.gridy = 2;
         passwordLoginPanel.add(passwordLabel, gbc);
@@ -102,14 +176,14 @@ public class AllergyManagementSystem extends JFrame {
         passwordLoginPanel.add(passwordField, gbc);
 
         // 登录按钮
-        JButton loginButton1 = new JButton("登录");
+        JButton loginButton1 =createStyledButton("登录");
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         passwordLoginPanel.add(loginButton1, gbc);
 
         // 添加切换按钮
-        JButton toggleButton = new JButton("切换为验证码登录");
+        JButton toggleButton =createStyledButton("切换为验证码登录");
         toggleButton.addActionListener(e -> {
             CardLayout cl = (CardLayout) panel.getLayout();
             cl.show(panel, "code");
@@ -118,7 +192,7 @@ public class AllergyManagementSystem extends JFrame {
         passwordLoginPanel.add(toggleButton, gbc);
 
         // 注册按钮（在密码登录页显示）
-        JButton registerButton1 = new JButton("注册");
+        JButton registerButton1 =createStyledButton("注册");
         gbc.gridy = 5;
         passwordLoginPanel.add(registerButton1, gbc);
 
@@ -139,7 +213,7 @@ public class AllergyManagementSystem extends JFrame {
 
         // 标题标签 - 验证码登录
         JLabel titleLabel2 = new JLabel("验证码登录", SwingConstants.CENTER);
-        titleLabel2.setFont(new Font("微软雅黑", Font.BOLD, 24));
+        titleLabel2.setFont(new Font("微软雅黑", Font.BOLD, 48));
         titleLabel2.setForeground(new Color(255, 255, 255));
         titleLabel2.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         gbc2.gridx = 0;
@@ -151,6 +225,9 @@ public class AllergyManagementSystem extends JFrame {
         // 电话号码输入
         JLabel phoneLabel2 = new JLabel("电话号码:");
         JTextField phoneField2 = new JTextField(20);
+        phoneLabel2.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        phoneLabel2.setForeground(Color.WHITE); // 设置文字颜色为白色
+        phoneLabel2.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
         gbc2.gridx = 0;
         gbc2.gridy = 1;
         gbc2.gridwidth = 1;
@@ -161,7 +238,16 @@ public class AllergyManagementSystem extends JFrame {
         // 验证码输入和获取按钮
         JLabel codeLabel = new JLabel("验证码:");
         JTextField codeField = new JTextField(20);
-        JButton getCodeButton = new JButton("获取验证码");
+        codeLabel.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        codeLabel.setForeground(Color.WHITE); // 设置文字颜色为白色
+        codeLabel.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
+        gbc2.gridx = 0;
+        gbc2.gridy = 2;
+        gbc2.gridwidth = 1;
+        codeLoginPanel.add(codeLabel, gbc2);
+        gbc2.gridx = 1;
+        codeLoginPanel.add(codeLabel, gbc2);
+        JButton getCodeButton = createStyledButton("获取验证码");
 
         // 创建一个中间面板用于水平排列验证码输入和按钮
         JPanel codeInputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -176,9 +262,8 @@ public class AllergyManagementSystem extends JFrame {
         gbc2.gridwidth = 2; // 占据两列以居中
         codeLoginPanel.add(codeInputPanel, gbc2);
 
-
         // 登录按钮
-        JButton loginButton2 = new JButton("登录");
+        JButton loginButton2 = createStyledButton("登录");
         gbc2.gridx = 0;
         gbc2.gridy = 3;
         gbc2.gridwidth = 2;
@@ -186,7 +271,7 @@ public class AllergyManagementSystem extends JFrame {
         codeLoginPanel.add(loginButton2, gbc2);
 
         // 添加切换按钮
-        JButton toggleButton2 = new JButton("切换为密码登录");
+        JButton toggleButton2 = createStyledButton("切换为密码登录");
         toggleButton2.addActionListener(e -> {
             CardLayout cl = (CardLayout) panel.getLayout();
             cl.show(panel, "password");
@@ -195,7 +280,7 @@ public class AllergyManagementSystem extends JFrame {
         codeLoginPanel.add(toggleButton2, gbc2);
 
         // 注册按钮
-        JButton registerButton2 = new JButton("注册");
+        JButton registerButton2 = createStyledButton("注册");
         gbc2.gridy = 5;
         codeLoginPanel.add(registerButton2, gbc2);
 
@@ -253,7 +338,7 @@ public class AllergyManagementSystem extends JFrame {
 
         // 标题标签 - 注册
         JLabel titleLabel3 = new JLabel("用户注册", SwingConstants.CENTER);
-        titleLabel3.setFont(new Font("微软雅黑", Font.BOLD, 24));
+        titleLabel3.setFont(new Font("微软雅黑", Font.BOLD, 48));
         titleLabel3.setForeground(new Color(255, 255, 255));
         titleLabel3.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         gbc3.gridx = 0;
@@ -264,6 +349,9 @@ public class AllergyManagementSystem extends JFrame {
         // 电话号码输入
         JLabel phoneLabel3 = new JLabel("电话号码:");
         JTextField phoneField3 = new JTextField(20);
+        phoneLabel3.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        phoneLabel3.setForeground(Color.WHITE); // 设置文字颜色为白色
+        phoneLabel3.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
         gbc3.gridx = 0;
         gbc3.gridy = 1;
         gbc3.gridwidth = 1;
@@ -274,6 +362,9 @@ public class AllergyManagementSystem extends JFrame {
         // 密码输入
         JLabel passwordLabel3 = new JLabel("密码:");
         JPasswordField passwordField3 = new JPasswordField(20);
+        passwordLabel3.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        passwordLabel3.setForeground(Color.WHITE); // 设置文字颜色为白色
+        passwordLabel3.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
         gbc3.gridx = 0;
         gbc3.gridy = 2;
         gbc3.gridwidth = 1;
@@ -284,7 +375,10 @@ public class AllergyManagementSystem extends JFrame {
         // 验证码输入和获取按钮
         JLabel codeLabel3 = new JLabel("验证码:");
         JTextField codeField3 = new JTextField(20);
-        JButton getCodeButton3 = new JButton("获取验证码");
+        codeLabel3.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
+        codeLabel3.setForeground(Color.WHITE); // 设置文字颜色为白色
+        codeLabel3.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
+        JButton getCodeButton3 = createStyledButton("获取验证码");
 
         // 创建一个中间面板用于水平排列验证码输入和按钮
         JPanel codeInputPanel3 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -299,12 +393,12 @@ public class AllergyManagementSystem extends JFrame {
         registerFormPanel.add(codeInputPanel3, gbc3);
 
         // 注册按钮
-        JButton registerButton3 = new JButton("提交注册");
+        JButton registerButton3 = createStyledButton("提交注册");
         gbc3.gridy = 4;
         registerFormPanel.add(registerButton3, gbc3);
 
         // 返回按钮
-        JButton backButton = new JButton("返回登录");
+        JButton backButton = createStyledButton("返回登录");
         gbc3.gridy = 5;
         registerFormPanel.add(backButton, gbc3);
 
