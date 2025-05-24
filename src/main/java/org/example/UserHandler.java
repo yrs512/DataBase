@@ -76,6 +76,33 @@ public class UserHandler {
             return fallbackErrorResponse();
         }
     }
+    /**
+     * 用户注册方法
+     * @param phone 用户电话号码
+     * @param password 密码(4~32位的字母数字下划线)
+     * @return 注册响应结果(JSON格式)
+     */
+    public String register(String phone, String password) {
+        // 参数校验
+        if (phone == null || phone.trim().isEmpty()) {
+            return createErrorResponse(400, "电话号码不能为空");
+        }
+
+        if (password == null || !password.matches("^[a-zA-Z0-9_]{4,32}$")) {
+            return createErrorResponse(400, "密码格式不正确，必须是4~32位的字母数字下划线");
+        }
+
+        // 模拟注册逻辑
+        switch (phone) {
+            case "13800000000":
+                return createErrorResponse(409, "该手机号已注册");
+            case "13800001111":
+                return createErrorResponse(400, "无效的手机号");
+            default:
+                return createSuccessResponse(200, "注册成功");
+        }
+    }
+
 
     /**
      * JSON处理失败时的备用响应

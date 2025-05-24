@@ -18,7 +18,7 @@ public class AllergyManagementSystem extends JFrame {
 
         // 加载背景图片 (图片放在项目的resources文件夹中)
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("/Background.jpg")).getImage();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "背景图片加载失败: " + e.getMessage());
             backgroundImage = null;
@@ -52,76 +52,315 @@ public class AllergyManagementSystem extends JFrame {
         tabbedPane.setForeground(Color.WHITE);
     }
 
+    // 创建带统一边框的面板
+    private JPanel createStyledPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // 统一内边距
+        panel.setOpaque(false);
+        return panel;
+    }
 
     private JPanel createLoginPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
+        // 单独加载登录界面背景图（假设放在 resources/login_background.jpg）
+        Image loginBackground = new ImageIcon(getClass().getResource("/Background.jpg")).getImage();
+        BackgroundPanel panel = new BackgroundPanel(loginBackground);
+        panel.setLayout(new CardLayout());
+
+        // 密码登录面板
+        JPanel passwordLoginPanel = createStyledPanel();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // 电话号码标签和输入框
-        JLabel phoneLabel = new JLabel("电话号码:");
-        JTextField phoneField = new JTextField(20);
+        // 标题标签 - 密码登录
+        JLabel titleLabel1 = new JLabel("密码登录", SwingConstants.CENTER);
+        titleLabel1.setFont(new Font("微软雅黑", Font.BOLD, 24));
+        titleLabel1.setForeground(new Color(255, 255, 255));
+        titleLabel1.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(phoneLabel, gbc);
-        gbc.gridx = 1;
-        panel.add(phoneField, gbc);
+        gbc.gridwidth = 2;
+        passwordLoginPanel.add(titleLabel1, gbc);
 
-        // 密码标签和输入框
+        // 电话号码输入
+        JLabel phoneLabel1 = new JLabel("电话号码:");
+        JTextField phoneField1 = new JTextField(20);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        passwordLoginPanel.add(phoneLabel1, gbc);
+        gbc.gridx = 1;
+        passwordLoginPanel.add(phoneField1, gbc);
+
+        // 密码输入
         JLabel passwordLabel = new JLabel("密码:");
         JPasswordField passwordField = new JPasswordField(20);
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(passwordLabel, gbc);
-        gbc.gridx = 1;
-        panel.add(passwordField, gbc);
-
-        // 验证码标签和输入框
-        JLabel codeLabel = new JLabel("验证码:");
-        JTextField codeField = new JTextField(20);
-        gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(codeLabel, gbc);
+        passwordLoginPanel.add(passwordLabel, gbc);
         gbc.gridx = 1;
-        panel.add(codeField, gbc);
+        passwordLoginPanel.add(passwordField, gbc);
 
         // 登录按钮
-        JButton loginButton = new JButton("登录");
+        JButton loginButton1 = new JButton("登录");
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.CENTER;
-        panel.add(loginButton, gbc);
+        passwordLoginPanel.add(loginButton1, gbc);
+
+        // 添加切换按钮
+        JButton toggleButton = new JButton("切换为验证码登录");
+        toggleButton.addActionListener(e -> {
+            CardLayout cl = (CardLayout) panel.getLayout();
+            cl.show(panel, "code");
+        });
+        gbc.gridy = 4;
+        passwordLoginPanel.add(toggleButton, gbc);
+
+        // 注册按钮（在密码登录页显示）
+        JButton registerButton1 = new JButton("注册");
+        gbc.gridy = 5;
+        passwordLoginPanel.add(registerButton1, gbc);
+
 
         // 结果展示区域
-        JTextArea resultArea = new JTextArea(10, 30);
-        resultArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(resultArea);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.BOTH;
-        panel.add(scrollPane, gbc);
+        JTextArea resultArea1 = new JTextArea(6, 30);
+        resultArea1.setEditable(false);
+        JScrollPane scrollPane1 = new JScrollPane(resultArea1);
+        gbc.gridy = 7;
+        passwordLoginPanel.add(scrollPane1, gbc);
 
-        // 登录按钮事件处理
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String phone = phoneField.getText();
-                String password = new String(passwordField.getPassword());
-                String code = codeField.getText();
 
-                // 调用UserHandler的登录方法
-                String response = userHandler.login(code, password, phone);
+        // 验证码登录面板
+        JPanel codeLoginPanel = createStyledPanel();
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.insets = new Insets(10, 10, 10, 10);
+        gbc2.fill = GridBagConstraints.HORIZONTAL;
 
-                // 显示结果
-                resultArea.setText(response);
+        // 标题标签 - 验证码登录
+        JLabel titleLabel2 = new JLabel("验证码登录", SwingConstants.CENTER);
+        titleLabel2.setFont(new Font("微软雅黑", Font.BOLD, 24));
+        titleLabel2.setForeground(new Color(255, 255, 255));
+        titleLabel2.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
+        gbc2.gridwidth = 2;
+        codeLoginPanel.add(titleLabel2, gbc2);
+
+
+        // 电话号码输入
+        JLabel phoneLabel2 = new JLabel("电话号码:");
+        JTextField phoneField2 = new JTextField(20);
+        gbc2.gridx = 0;
+        gbc2.gridy = 1;
+        gbc2.gridwidth = 1;
+        codeLoginPanel.add(phoneLabel2, gbc2);
+        gbc2.gridx = 1;
+        codeLoginPanel.add(phoneField2, gbc2);
+
+        // 验证码输入和获取按钮
+        JLabel codeLabel = new JLabel("验证码:");
+        JTextField codeField = new JTextField(20);
+        JButton getCodeButton = new JButton("获取验证码");
+
+        // 创建一个中间面板用于水平排列验证码输入和按钮
+        JPanel codeInputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        codeInputPanel.setOpaque(false); // 保持透明以适配背景
+        codeInputPanel.add(codeLabel);
+        codeInputPanel.add(codeField);
+        codeInputPanel.add(getCodeButton);
+
+        // 将组合面板添加到 gbc 布局中
+        gbc2.gridx = 0;
+        gbc2.gridy = 2;
+        gbc2.gridwidth = 2; // 占据两列以居中
+        codeLoginPanel.add(codeInputPanel, gbc2);
+
+
+        // 登录按钮
+        JButton loginButton2 = new JButton("登录");
+        gbc2.gridx = 0;
+        gbc2.gridy = 3;
+        gbc2.gridwidth = 2;
+        gbc2.insets = new Insets(10, 10, 10, 10);
+        codeLoginPanel.add(loginButton2, gbc2);
+
+        // 添加切换按钮
+        JButton toggleButton2 = new JButton("切换为密码登录");
+        toggleButton2.addActionListener(e -> {
+            CardLayout cl = (CardLayout) panel.getLayout();
+            cl.show(panel, "password");
+        });
+        gbc2.gridy = 4;
+        codeLoginPanel.add(toggleButton2, gbc2);
+
+        // 注册按钮
+        JButton registerButton2 = new JButton("注册");
+        gbc2.gridy = 5;
+        codeLoginPanel.add(registerButton2, gbc2);
+
+
+        // 结果展示区域
+        JTextArea resultArea2 = new JTextArea(6, 30);
+        resultArea2.setEditable(false);
+        JScrollPane scrollPane2 = new JScrollPane(resultArea2);
+        gbc2.gridy = 7;
+        codeLoginPanel.add(scrollPane2, gbc2);
+
+        // 添加到主面板card layout中
+        panel.add(passwordLoginPanel, "password");
+        panel.add(codeLoginPanel, "code");
+
+        // 设置整体布局结构
+        JPanel container = new JPanel(new BorderLayout());
+        container.add(panel, BorderLayout.CENTER);
+
+
+        // 获取验证码按钮事件处理
+        getCodeButton.addActionListener(e -> {
+            String phone = phoneField2.getText();
+            if (phone == null || phone.trim().isEmpty()) {
+                resultArea2.setText("请先输入电话号码");
+                return;
             }
+            // 模拟发送验证码
+            JOptionPane.showMessageDialog(panel, "验证码已发送至：" + phone);
         });
 
-        return panel;
+        // 密码登录按钮事件处理
+        loginButton1.addActionListener(e -> {
+            String phone = phoneField1.getText();
+            String password = new String(passwordField.getPassword());
+
+            String response = userHandler.login(null, password, phone);
+            resultArea1.setText(response);
+        });
+
+        // 验证码登录按钮事件处理
+        loginButton2.addActionListener(e -> {
+            String phone = phoneField2.getText();
+            String code = codeField.getText();
+
+            String response = userHandler.login(code, null, phone);
+            resultArea2.setText(response);
+        });
+
+        // 注册页面（与密码登录界面一致）
+        JPanel registerFormPanel = createStyledPanel();
+        GridBagConstraints gbc3 = new GridBagConstraints();
+        gbc3.insets = new Insets(10, 10, 10, 10);
+        gbc3.fill = GridBagConstraints.HORIZONTAL;
+
+        // 标题标签 - 注册
+        JLabel titleLabel3 = new JLabel("用户注册", SwingConstants.CENTER);
+        titleLabel3.setFont(new Font("微软雅黑", Font.BOLD, 24));
+        titleLabel3.setForeground(new Color(255, 255, 255));
+        titleLabel3.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        gbc3.gridx = 0;
+        gbc3.gridy = 0;
+        gbc3.gridwidth = 2;
+        registerFormPanel.add(titleLabel3, gbc3);
+
+        // 电话号码输入
+        JLabel phoneLabel3 = new JLabel("电话号码:");
+        JTextField phoneField3 = new JTextField(20);
+        gbc3.gridx = 0;
+        gbc3.gridy = 1;
+        gbc3.gridwidth = 1;
+        registerFormPanel.add(phoneLabel3, gbc3);
+        gbc3.gridx = 1;
+        registerFormPanel.add(phoneField3, gbc3);
+
+        // 密码输入
+        JLabel passwordLabel3 = new JLabel("密码:");
+        JPasswordField passwordField3 = new JPasswordField(20);
+        gbc3.gridx = 0;
+        gbc3.gridy = 2;
+        gbc3.gridwidth = 1;
+        registerFormPanel.add(passwordLabel3, gbc3);
+        gbc3.gridx = 1;
+        registerFormPanel.add(passwordField3, gbc3);
+
+        // 验证码输入和获取按钮
+        JLabel codeLabel3 = new JLabel("验证码:");
+        JTextField codeField3 = new JTextField(20);
+        JButton getCodeButton3 = new JButton("获取验证码");
+
+        // 创建一个中间面板用于水平排列验证码输入和按钮
+        JPanel codeInputPanel3 = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        codeInputPanel3.setOpaque(false); // 保持透明以适配背景
+        codeInputPanel3.add(codeLabel3);
+        codeInputPanel3.add(codeField3);
+        codeInputPanel3.add(getCodeButton3);
+
+        gbc3.gridx = 0;
+        gbc3.gridy = 3;
+        gbc3.gridwidth = 2;
+        registerFormPanel.add(codeInputPanel3, gbc3);
+
+        // 注册按钮
+        JButton registerButton3 = new JButton("提交注册");
+        gbc3.gridy = 4;
+        registerFormPanel.add(registerButton3, gbc3);
+
+        // 返回按钮
+        JButton backButton = new JButton("返回登录");
+        gbc3.gridy = 5;
+        registerFormPanel.add(backButton, gbc3);
+
+        // 结果展示区域 - 注册页
+        JTextArea resultArea3 = new JTextArea(6, 30); // 高度为6行，宽度为30字符
+        resultArea3.setEditable(false); // 不允许编辑
+        resultArea3.setOpaque(false); // 设置为透明以适配背景
+        resultArea3.setForeground(Color.WHITE); // 白色文字增强可读性
+        resultArea3.setBackground(new Color(0, 0, 0, 80)); // 半透明黑色背景
+        resultArea3.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 50), 1)); // 淡白边框
+
+        JScrollPane scrollPane3 = new JScrollPane(resultArea3);
+        gbc3.gridy = 6; // 放在“返回登录”按钮下方
+        registerFormPanel.add(scrollPane3, gbc3);
+
+
+
+        // 添加到主面板card layout中
+        panel.add(registerFormPanel, "register");
+
+
+// 注册按钮事件处理
+        registerButton3.addActionListener(e -> {
+            String phone = phoneField3.getText();
+            String password = new String(passwordField3.getPassword());
+
+            String response = userHandler.register(phone, password);
+            resultArea3.setText(response); // 将结果输出到文本框
+        });
+        registerButton2.addActionListener(e -> {
+            String phone = phoneField2.getText();
+            String password = ""; // 验证码登录时不填密码
+
+            String response = userHandler.register(phone, password);
+            resultArea2.setText(response);
+        });
+        registerButton1.addActionListener(e -> {
+            CardLayout cl = (CardLayout) panel.getLayout();
+            cl.show(panel, "register");
+        });
+        registerButton2.addActionListener(e -> {
+            CardLayout cl = (CardLayout) panel.getLayout();
+            cl.show(panel, "register");
+        });
+        // 返回登录按钮事件
+        backButton.addActionListener(e -> {
+            CardLayout cl = (CardLayout) panel.getLayout();
+            cl.show(panel, "password"); // 切换回密码登录页
+            // 清空注册页结果展示框
+            resultArea3.setText("");
+        });
+
+
+        return container;
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
