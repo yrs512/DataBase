@@ -3,6 +3,9 @@ package org.example;
 import org.example.login.LoginForm;
 import org.example.login.UserHandler;
 import org.example.message.PeopleMessage;
+import org.harvey.respiratory.TestServerHandlerRegister;
+import org.harvey.respiratory.handler.UserSecurityHandler;
+import org.harvey.respiratory.pojo.dto.UserDto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +14,6 @@ public class AllergyManagementSystem extends JFrame {
     private JTabbedPane tabbedPane;
     private UserHandler userHandler;
     private Image backgroundImage;
-//    public static final HttpClientManager MANAGER = new HttpClientManager();
-//    public static final HttpRequestBuilder REQUEST_BUILDER = new HttpRequestBuilder();
     private boolean hasLogin;
 
     public AllergyManagementSystem() {
@@ -33,6 +34,7 @@ public class AllergyManagementSystem extends JFrame {
         initComponents();
     }
 
+    //  初始化组件
     private void initComponents() {
         // 使用纯色蓝色背景面板
         BackgroundPanel backgroundPanel = new BackgroundPanel(); // 不使用图片
@@ -167,6 +169,7 @@ public class AllergyManagementSystem extends JFrame {
         panel.setOpaque(false);
         return panel;
     }
+   private final static  TestServerHandlerRegister REGISTER = new TestServerHandlerRegister();
 
     private JPanel createLoginPanel() {
         // 单独加载登录界面背景图（假设放在 resources/background.jpg）
@@ -193,6 +196,7 @@ public class AllergyManagementSystem extends JFrame {
         // 电话号码输入
         JLabel phoneLabel1 = new JLabel("电话号码:");
         JTextField phoneField1 = new JTextField(20);
+        JTextField idField = new JTextField(20);
         phoneLabel1.setFont(new Font("微软雅黑", Font.BOLD, 18));//字体大小
         phoneLabel1.setForeground(Color.WHITE); // 设置文字颜色为白色
         phoneLabel1.setBackground(new Color(0, 0, 0, 50)); // 可选：半透明背景增强可读性
@@ -358,8 +362,14 @@ public class AllergyManagementSystem extends JFrame {
 
             String phone = phoneField1.getText();
             String password = new String(passwordField.getPassword());
-            LoginForm LoginFormPassword = new LoginForm(null, password, phone);
-//            LoginResponse response = userHandler.login(LoginFormPassword);
+
+            org.harvey.respiratory.pojo.dto.LoginFormDto loginFormDto = new org.harvey.respiratory.pojo.dto.LoginFormDto(phone, null, password);
+
+            UserSecurityHandler handler = REGISTER.get(UserSecurityHandler.class);
+            handler.login(loginFormDto);
+
+
+            //            LoginResponse response = userHandler.login(LoginFormPassword);
 
             // 校验电话号码是否为空
             if (phone == null || phone.trim().isEmpty()) {
