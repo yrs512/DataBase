@@ -1,9 +1,9 @@
 package org.yrs512.respiratory.gui.page;
 
-import org.yrs512.respiratory.gui.BackgroundPanel;
-import org.yrs512.respiratory.gui.ButtonPainter;
-import org.yrs512.respiratory.gui.CustomDialog;
-import org.yrs512.respiratory.gui.RespiratoryManagementSystem;
+import org.yrs512.respiratory.gui.global.BackgroundPanel;
+import org.yrs512.respiratory.gui.global.ButtonPainter;
+import org.yrs512.respiratory.gui.global.CustomDialog;
+import org.yrs512.respiratory.gui.global.RespiratoryManagementSystem;
 
 import javax.swing.*;
 import java.awt.*;

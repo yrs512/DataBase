@@ -1,9 +1,15 @@
-package org.yrs512.respiratory.gui;
+package org.yrs512.respiratory.gui.global;
 
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * 用户面板
+ *
+ * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
+ * @version 1.0
+ * @date 2025-06-11 00:14
+ */
 public class CustomDialog extends JDialog {
     public ButtonPainter buttonPainter = new ButtonPainter();
     public CustomDialog(JFrame parent, String message) {

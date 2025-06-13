@@ -1,8 +1,14 @@
-package org.yrs512.respiratory.gui;
+package org.yrs512.respiratory.gui.global;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * 背景面板
+ *
+ * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
+ * @version 1.0
+ * @date 2025-06-10 22:38
+ */
 public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
     private float overlayAlpha = 0.3f; // 调整遮罩透明度

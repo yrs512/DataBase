@@ -1,34 +1,26 @@
 package org.yrs512.respiratory.gui.page;
 
-import org.harvey.respiratory.client.ServerHandlerRegister;
-import org.harvey.respiratory.client.handler.UserSecurityHandler;
-import org.harvey.respiratory.client.pojo.dto.LoginFormDto;
-import org.yrs512.respiratory.gui.BackgroundPanel;
-import org.yrs512.respiratory.gui.ButtonPainter;
-import org.yrs512.respiratory.gui.CustomDialog;
-import org.yrs512.respiratory.gui.RespiratoryManagementSystem;
+import org.yrs512.respiratory.gui.global.BackgroundPanel;
+import org.yrs512.respiratory.gui.global.ButtonPainter;
+import org.yrs512.respiratory.gui.global.RespiratoryManagementSystem;
+import org.yrs512.respiratory.gui.listener.UserLoginRegisterListener;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- *
  * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
  * @version 1.0
  * @date 2025-06-11 00:13
  */ // 登录面板构建器类
 public class LoginPanelBuilder {
+    private final UserLoginRegisterListener listener;
     private ButtonPainter buttonPainter;
-    private ServerHandlerRegister register;
-    private RespiratoryManagementSystem system;
 
     public LoginPanelBuilder(
-            ButtonPainter buttonPainter,
-            ServerHandlerRegister register,
-            RespiratoryManagementSystem system) {
+            ButtonPainter buttonPainter, RespiratoryManagementSystem system) {
         this.buttonPainter = buttonPainter;
-        this.register = register;
-        this.system = system;
+        this.listener = new UserLoginRegisterListener(system);
     }
 
     public JPanel createLoginPanel() {
@@ -111,78 +103,15 @@ public class LoginPanelBuilder {
 
         JButton passwordLoginButton = buttonPainter.createStyledButton("登录");
         panel.add(passwordLoginButton, gbc);
-        passwordLoginButton.addActionListener(e -> {
-            String phone = getPhoneNumber(panel);
-            String password = getPassword(panel);
-
-            LoginFormDto loginFormDto = new LoginFormDto(phone, null, password);
-
-            UserSecurityHandler handler = register.get(UserSecurityHandler.class);
-            handler.login(loginFormDto);
-
-            if (!validatePhoneNumber(phone)) {
-                return;
-            }
-
-            if (!validatePassword(password)) {
-                return;
-            }
-        });
+        passwordLoginButton.addActionListener(e -> listener.listenPasswordLogin(panel));
     }
 
-    private String getPhoneNumber(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JTextField) {
-                return ((JTextField) component).getText();
-            }
-        }
-        return null;
-    }
-
-    private String getPassword(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JPasswordField) {
-                return new String(((JPasswordField) component).getPassword());
-            }
-        }
-        return null;
-    }
-
-    private boolean validatePhoneNumber(String phone) {
-        if (phone == null || phone.trim().isEmpty()) {
-            new CustomDialog(system, "请输入电话号码!").setVisible(true);
-            return false;
-        }
-
-        if (!phone.matches("\\d{11}")) {
-            new CustomDialog(system, "请输入正确的11位电话号码").setVisible(true);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean validatePassword(String password) {
-        if (password == null || password.trim().isEmpty()) {
-            new CustomDialog(system, "请输入密码!").setVisible(true);
-            return false;
-        }
-
-        if (!password.matches("^[a-zA-Z0-9_]{4,32}$")) {
-            new CustomDialog(
-                    system, "密码格式不正确，必须是4~32位的字母数字下划线").setVisible(
-                    true);
-            return false;
-        }
-        return true;
-    }
 
     private void addSwitchToCodeLoginButton(JPanel panel, GridBagConstraints gbc) {
         JButton switchToCodeLoginButton = buttonPainter.createStyledButton("切换为验证码登录");
         switchToCodeLoginButton.addActionListener(e -> {
-            CardLayout cl = (CardLayout) ((BackgroundPanel) panel.getParent()).getLayout();
-            cl.show((BackgroundPanel) panel.getParent(), "code");
+            CardLayout cl = (CardLayout) panel.getParent().getLayout();
+            cl.show(panel.getParent(), "code");
         });
         gbc.gridy = 4;
         panel.add(switchToCodeLoginButton, gbc);
@@ -193,8 +122,8 @@ public class LoginPanelBuilder {
         gbc.gridy = 5;
         panel.add(passwordLoginRegisterButton, gbc);
         passwordLoginRegisterButton.addActionListener(e -> {
-            CardLayout cl = (CardLayout) ((BackgroundPanel) panel.getParent()).getLayout();
-            cl.show((BackgroundPanel) panel.getParent(), "register");
+            CardLayout cl = (CardLayout) panel.getParent().getLayout();
+            cl.show(panel.getParent(), "register");
         });
     }
 
@@ -258,25 +187,9 @@ public class LoginPanelBuilder {
         gbc.gridwidth = 2;
         panel.add(codeInputPanel, gbc);
 
-        getCodeButton.addActionListener(e -> {
-            String phone = getCodeLoginPhoneNumber(panel);
-            LoginFormDto LoginFormCode = new LoginFormDto(null, null, phone);
-
-            if (!validatePhoneNumber(phone)) {
-                return;
-            }
-        });
+        getCodeButton.addActionListener(e -> listener.listenGetCode(panel));
     }
 
-    private String getCodeLoginPhoneNumber(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JTextField) {
-                return ((JTextField) component).getText();
-            }
-        }
-        return null;
-    }
 
     private void addCodeLoginButton(JPanel panel, GridBagConstraints gbc) {
         JButton codeLoginButton = buttonPainter.createStyledButton("登录");
@@ -286,49 +199,15 @@ public class LoginPanelBuilder {
         gbc.insets = new Insets(10, 10, 10, 10);
         panel.add(codeLoginButton, gbc);
 
-        codeLoginButton.addActionListener(e -> {
-            String phone = getCodeLoginPhoneNumber(panel);
-            String code = getCode(panel);
-            LoginFormDto LoginFormCode = new LoginFormDto(code, null, phone);
-
-            if (!validatePhoneNumber(phone)) {
-                return;
-            }
-
-            if (!validateCode(code)) {
-                return;
-            }
-        });
+        codeLoginButton.addActionListener(e ->listener.listenCodeLogin(panel));
     }
 
-    private String getCode(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JTextField && component.getName() == null) {
-                return ((JTextField) component).getText();
-            }
-        }
-        return null;
-    }
-
-    private boolean validateCode(String code) {
-        if (code == null || code.trim().isEmpty()) {
-            new CustomDialog(system, "请输入验证码!").setVisible(true);
-            return false;
-        }
-
-        if (!code.matches("\\d{6}")) {
-            new CustomDialog(system, "请输入正确的6位验证码!").setVisible(true);
-            return false;
-        }
-        return true;
-    }
 
     private void addSwitchToPasswordLoginButton(JPanel panel, GridBagConstraints gbc) {
         JButton switchToPasswordLoginButton = buttonPainter.createStyledButton("切换为密码登录");
         switchToPasswordLoginButton.addActionListener(e -> {
-            CardLayout cl = (CardLayout) ((BackgroundPanel) panel.getParent()).getLayout();
-            cl.show((BackgroundPanel) panel.getParent(), "password");
+            CardLayout cl = (CardLayout) panel.getParent().getLayout();
+            cl.show(panel.getParent(), "password");
         });
         gbc.gridy = 4;
         panel.add(switchToPasswordLoginButton, gbc);
@@ -339,8 +218,8 @@ public class LoginPanelBuilder {
         gbc.gridy = 5;
         panel.add(codeLoginRegisterButton, gbc);
         codeLoginRegisterButton.addActionListener(e -> {
-            CardLayout cl = (CardLayout) ((BackgroundPanel) panel.getParent()).getLayout();
-            cl.show((BackgroundPanel) panel.getParent(), "register");
+            CardLayout cl = (CardLayout) panel.getParent().getLayout();
+            cl.show(panel.getParent(), "register");
         });
     }
 
@@ -439,30 +318,7 @@ public class LoginPanelBuilder {
         gbc.gridy = 5;
         panel.add(registerSubmitButton, gbc);
 
-        registerSubmitButton.addActionListener(e -> {
-            String phone = getRegisterPhoneNumber(panel);
-            String password = getRegisterPassword(panel);
-        });
-    }
-
-    private String getRegisterPhoneNumber(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JTextField && component.getName() == null) {
-                return ((JTextField) component).getText();
-            }
-        }
-        return null;
-    }
-
-    private String getRegisterPassword(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JPasswordField) {
-                return new String(((JPasswordField) component).getPassword());
-            }
-        }
-        return null;
+        registerSubmitButton.addActionListener(e -> listener.listenRegister(panel));
     }
 
     private void addBackToLoginButton(JPanel panel, GridBagConstraints gbc) {
@@ -470,8 +326,8 @@ public class LoginPanelBuilder {
         gbc.gridy = 6;
         panel.add(backToLoginButton, gbc);
         backToLoginButton.addActionListener(e -> {
-            CardLayout cl = (CardLayout) ((BackgroundPanel) panel.getParent()).getLayout();
-            cl.show((BackgroundPanel) panel.getParent(), "password");
+            CardLayout cl = (CardLayout) panel.getParent().getLayout();
+            cl.show(panel.getParent(), "password");
         });
     }
 

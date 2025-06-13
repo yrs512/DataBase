@@ -1,4 +1,4 @@
-package org.yrs512.respiratory.gui;
+package org.yrs512.respiratory.gui.global;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
+ * 按钮绘制器
  *
  * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
  * @version 1.0

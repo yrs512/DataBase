@@ -1,4 +1,4 @@
-package org.yrs512.respiratory.gui;
+package org.yrs512.respiratory.gui.global;
 
 import org.harvey.respiratory.client.ServerHandlerRegister;
 import org.harvey.respiratory.client.ServerHandlerRegisterFactory;
@@ -8,7 +8,13 @@ import org.yrs512.respiratory.gui.page.ProfilePanelBuilder;
 import javax.swing.*;
 import java.awt.*;
 
-// 主类，继承自 JFrame
+/**
+ * 主类，继承自 JFrame
+ *
+ * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
+ * @version 1.0
+ * @date 2025-06-13 23:22
+ */
 public class RespiratoryManagementSystem extends JFrame {
     private boolean hasLogin;
     private ButtonPainter buttonPainter;
@@ -44,7 +50,7 @@ public class RespiratoryManagementSystem extends JFrame {
 
     // 显示登录面板
     public void showLoginPanel() {
-        JPanel loginPanel = new LoginPanelBuilder(buttonPainter, REGISTER, this).createLoginPanel();
+        JPanel loginPanel = new LoginPanelBuilder(buttonPainter, this).createLoginPanel();
         replaceMainContentPanel(loginPanel);
     }
 
@@ -84,13 +90,6 @@ public class RespiratoryManagementSystem extends JFrame {
         mainPanel.add(newPanel, BorderLayout.CENTER);
         mainPanel.revalidate();
         mainPanel.repaint();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            RespiratoryManagementSystem app = new RespiratoryManagementSystem();
-            app.setVisible(true);
-        });
     }
 }
 

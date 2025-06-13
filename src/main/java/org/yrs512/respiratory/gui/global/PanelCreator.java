@@ -1,13 +1,15 @@
-package org.yrs512.respiratory.gui;
+package org.yrs512.respiratory.gui.global;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
+ * 面板创建器类
+ *
  * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
  * @version 1.0
  * @date 2025-06-11 00:14
- */ // 面板创建器类
+ */
 public class PanelCreator {
     private ButtonPainter buttonPainter;
     private RespiratoryManagementSystem system;
