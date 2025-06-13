@@ -11,6 +11,7 @@ import java.awt.*;
  */
 public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
+
     private float overlayAlpha = 0.3f; // 调整遮罩透明度
 
     public BackgroundPanel() {
