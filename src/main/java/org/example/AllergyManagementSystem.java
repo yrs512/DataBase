@@ -1,10 +1,13 @@
 package org.example;
 
+import org.example.healthcare.BalanceQuery;
+import org.example.healthcare.Pay;
 import org.example.interFace.BackgroundPanel;
 import org.example.interFace.LoginPanelHandler;
 import org.example.interFace.UIComponentInitializer;
 import org.example.login.LoginForm;
 import org.example.login.UserHandler;
+import org.example.panel.HealthcareBalancePanelFactory;
 import org.example.panel.ProfilePanelFactory;
 import org.harvey.respiratory.TestServerHandlerRegister;
 import org.harvey.respiratory.handler.UserSecurityHandler;
@@ -37,21 +40,8 @@ public class AllergyManagementSystem extends JFrame {
         userHandler = new UserHandler();
         UIComponentInitializer.initComponents(this);
     }
-
-    // 新增的显示登录面板方法
-    LoginPanelFactory loginPanelFactory = new LoginPanelFactory();
-
-    // 创建带统一边框的面板
-    private JPanel createStyledPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // 统一内边距
-        panel.setOpaque(false);
-        return panel;
-    }
     private final static  TestServerHandlerRegister REGISTER = new TestServerHandlerRegister();
 
-    JPanel loginPanel = LoginPanelFactory.createLoginPanel(this);
-    ProfilePanelFactory profilePanelFactory = new ProfilePanelFactory();
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             AllergyManagementSystem app = new AllergyManagementSystem();

@@ -1,9 +1,11 @@
 package org.example.interFace;
 
 import org.example.AllergyManagementSystem;
-import org.example.interFace.LoginPanelHandler; // 确保导入
+import org.example.interFace.LoginPanelHandler;
 import org.example.CustomDialog;
 import org.example.login.LoginForm;
+import org.example.panel.HealthcarePanelHandler;
+
 import org.harvey.respiratory.handler.UserSecurityHandler;
 
 import javax.swing.*;
@@ -40,6 +42,13 @@ public class UIComponentInitializer {
         profileButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         profileButton.addActionListener(e -> showProfilePanel(frame));
         buttonPanel.add(profileButton);
+
+        // 添加医保按钮
+        JButton healthcareButton = ButtonFactory.createStyledButton("医保");
+        healthcareButton.setPreferredSize(new Dimension(120, 40));
+        healthcareButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        healthcareButton.addActionListener(e -> HealthcarePanelHandler.showHealthcarePanel(frame));
+        buttonPanel.add(healthcareButton);
 
         // 主内容面板
         JPanel mainContentPanel = new JPanel(new BorderLayout());
