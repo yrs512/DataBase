@@ -2,7 +2,9 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
-import org.example.AllergyManagementSystem;
+
+import org.example.interFace.BackgroundPanel;
+import org.example.interFace.ButtonFactory;
 
 public class CustomDialog extends JDialog {
     public CustomDialog(JFrame parent, String message) {
@@ -20,7 +22,7 @@ public class CustomDialog extends JDialog {
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JButton okButton = AllergyManagementSystem.createStyledButton("确定");
+        JButton okButton = ButtonFactory.createStyledButton("确定");
         okButton.addActionListener(e -> dispose());
 
         JPanel buttonPanel = new JPanel();

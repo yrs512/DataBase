@@ -1,9 +1,9 @@
-package org.example;
+package org.example.interFace;
 
 import javax.swing.*;
 import java.awt.*;
 
-class BackgroundPanel extends JPanel {
+public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
     private float overlayAlpha = 0.3f; // 调整遮罩透明度
 

@@ -1,42 +1,44 @@
 package org.example.interFace;
 
+import org.example.AllergyManagementSystem;
+import org.example.interFace.LoginPanelHandler; // 确保导入
+import org.example.CustomDialog;
+import org.example.login.LoginForm;
+import org.harvey.respiratory.handler.UserSecurityHandler;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class ComponentInitializer {
+import static org.example.panel.ProfilePanelFactory.showProfilePanel;
 
-    private final AllergyManagementSystem frame;
+public class UIComponentInitializer {
 
-    public ComponentInitializer(AllergyManagementSystem frame) {
-        this.frame = frame;
-    }
-
-    public void initComponents() {
+    public static void initComponents(AllergyManagementSystem frame) {
         // 使用纯色蓝色背景面板
         BackgroundPanel backgroundPanel = new BackgroundPanel(); // 不使用图片
         backgroundPanel.setBackground(new Color(70, 130, 180)); // 深蓝色
         backgroundPanel.setOpaque(true); // 设置为不透明才能显示颜色
         backgroundPanel.setLayout(new BorderLayout());
 
-        frame.tabbedPane = new JTabbedPane();
-        frame.tabbedPane.setOpaque(false); // 使标签页透明
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setOpaque(false); // 使标签页透明
 
         // 创建一个带透明背景的面板来放置按钮
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setOpaque(false);
 
         // 添加登录按钮
-        JButton loginButton = createStyledButton("用户登录");
+        JButton loginButton = ButtonFactory.createStyledButton("用户登录");
         loginButton.setPreferredSize(new Dimension(120, 40));
         loginButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        loginButton.addActionListener(e -> frame.showLoginPanel());
+        loginButton.addActionListener(e -> LoginPanelHandler.showLoginPanel(frame));
         buttonPanel.add(loginButton);
 
         // 添加个人信息按钮
-        JButton profileButton = createStyledButton("个人信息");
+        JButton profileButton = ButtonFactory.createStyledButton("个人信息");
         profileButton.setPreferredSize(new Dimension(120, 40));
         profileButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        profileButton.addActionListener(e -> frame.showProfilePanel());
+        profileButton.addActionListener(e -> showProfilePanel(frame));
         buttonPanel.add(profileButton);
 
         // 主内容面板
@@ -58,12 +60,8 @@ public class ComponentInitializer {
         frame.setContentPane(mainPanel); // 更新内容面板
 
         // 设置标签页字体和颜色
-        frame.tabbedPane.setFont(new Font("微软雅黑", Font.BOLD, 18));
-        frame.tabbedPane.setForeground(Color.WHITE);
+        tabbedPane.setFont(new Font("微软雅黑", Font.BOLD, 18));
+        tabbedPane.setForeground(Color.WHITE);
     }
 
-    // 将createStyledButton移到这里或保留原位置（视情况而定）
-    public static JButton createStyledButton(String text) {
-        return AllergyManagementSystem.createStyledButton(text); // 复用静态方法
-    }
 }
