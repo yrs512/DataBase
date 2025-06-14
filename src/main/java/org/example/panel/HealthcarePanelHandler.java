@@ -50,7 +50,7 @@ public class HealthcarePanelHandler {
             welcomePanel.setOpaque(false);
             JLabel welcomeLabel = new JLabel("欢迎使用过敏性疾病管理系统", SwingConstants.CENTER);
             welcomeLabel.setFont(new Font("微软雅黑", Font.BOLD, 48));
-            welcomeLabel.setForeground(Color.WHITE);
+            welcomeLabel.setForeground(Color.BLACK);
             welcomeLabel.setBorder(BorderFactory.createEmptyBorder(100, 0, 0, 0));
             welcomePanel.add(welcomeLabel, BorderLayout.CENTER);
 
