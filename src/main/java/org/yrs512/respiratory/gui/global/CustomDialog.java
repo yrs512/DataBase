@@ -1,10 +1,17 @@
-package org.example;
+package org.yrs512.respiratory.gui.global;
+
 
 import javax.swing.*;
 import java.awt.*;
-import org.example.AllergyManagementSystem;
-
+/**
+ * 用户面板
+ *
+ * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
+ * @version 1.0
+ * @date 2025-06-11 00:14
+ */
 public class CustomDialog extends JDialog {
+    public ButtonPainter buttonPainter = new ButtonPainter();
     public CustomDialog(JFrame parent, String message) {
         super(parent, "提示", true);
         setSize(400, 200);
@@ -20,7 +27,7 @@ public class CustomDialog extends JDialog {
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JButton okButton = AllergyManagementSystem.createStyledButton("确定");
+        JButton okButton = buttonPainter.createStyledButton("确定");
         okButton.addActionListener(e -> dispose());
 
         JPanel buttonPanel = new JPanel();
