@@ -7,6 +7,8 @@ import org.yrs512.respiratory.gui.listener.UserLoginRegisterListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
@@ -15,16 +17,18 @@ import java.awt.*;
  */ // 登录面板构建器类
 public class LoginPanelBuilder {
     private final UserLoginRegisterListener listener;
+    private final RespiratoryManagementSystem system;
     private ButtonPainter buttonPainter;
 
     public LoginPanelBuilder(
             ButtonPainter buttonPainter, RespiratoryManagementSystem system) {
         this.buttonPainter = buttonPainter;
         this.listener = new UserLoginRegisterListener(system);
+        this.system = system;
     }
 
     public JPanel createLoginPanel() {
-        Image loginBackground = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
+        Image loginBackground = system.getBackgroundImage();
         BackgroundPanel panel = new BackgroundPanel(loginBackground);
         panel.setLayout(new CardLayout());
 
@@ -35,7 +39,6 @@ public class LoginPanelBuilder {
         panel.add(passwordLoginPanel, "password");
         panel.add(codeLoginPanel, "code");
         panel.add(registerFormPanel, "register");
-
         JPanel container = new JPanel(new BorderLayout());
         container.add(panel, BorderLayout.CENTER);
 

@@ -1,12 +1,12 @@
 package org.yrs512.respiratory.gui.global;
 
-import org.harvey.respiratory.client.ServerHandlerRegister;
-import org.harvey.respiratory.client.ServerHandlerRegisterFactory;
+import lombok.Getter;
 import org.yrs512.respiratory.gui.page.LoginPanelBuilder;
 import org.yrs512.respiratory.gui.page.ProfilePanelBuilder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 /**
  * 主类，继承自 JFrame
@@ -16,26 +16,28 @@ import java.awt.*;
  * @date 2025-06-13 23:22
  */
 public class RespiratoryManagementSystem extends JFrame {
-    private boolean hasLogin;
-    private ButtonPainter buttonPainter;
-    Image backgroundImage;
-
-    private final static ServerHandlerRegister REGISTER = ServerHandlerRegisterFactory.TEST;
+    private static final String BACKGROUND_JPG = "/background.jpg";
+    private final ButtonPainter buttonPainter;
+    @Getter
+    private  Image backgroundImage;
 
     public RespiratoryManagementSystem() {
-        setTitle("过敏性疾病管理系统");
-        setSize(1200, 800);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // 居中显示
-
-        loadBackgroundImage();
+        super.setTitle("过敏性疾病管理系统");
+        super.setSize(1200, 800);
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setLocationRelativeTo(null); // 居中显示
+        loadBackgroundImage(BACKGROUND_JPG);
         buttonPainter = new ButtonPainter();
         initComponents();
     }
 
-    private void loadBackgroundImage() {
+    private void loadBackgroundImage(String path) {
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
+            URL resource = getClass().getResource(path);
+            if (resource == null) {
+                throw new IllegalStateException("no image");
+            }
+            backgroundImage = new ImageIcon(resource).getImage();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "背景图片加载失败: " + e.getMessage());
             backgroundImage = null;
@@ -45,20 +47,9 @@ public class RespiratoryManagementSystem extends JFrame {
     // 初始化组件
     private void initComponents() {
         JPanel mainPanel = new PanelCreator(buttonPainter, this).createMainPanel();
-        setContentPane(mainPanel);
+        super.setContentPane(mainPanel);
     }
 
-    // 显示登录面板
-    public void showLoginPanel() {
-        JPanel loginPanel = new LoginPanelBuilder(buttonPainter, this).createLoginPanel();
-        replaceMainContentPanel(loginPanel);
-    }
-
-    // 显示个人信息面板
-    public void showProfilePanel() {
-        JPanel profilePanel = new ProfilePanelBuilder(buttonPainter, this).createProfilePanel();
-        replaceMainContentPanel(profilePanel);
-    }
 
     // 返回主面板
     public void returnToMainPanel() {
@@ -83,6 +74,22 @@ public class RespiratoryManagementSystem extends JFrame {
         return welcomePanel;
     }
 
+    /**
+     * 显示登录面板
+     */
+    public void showLoginPanel() {
+        JPanel loginPanel = new LoginPanelBuilder(buttonPainter, this).createLoginPanel();
+        replaceMainContentPanel(loginPanel);
+    }
+
+    /**
+     * 显示个人信息面板
+     */
+    public void showProfilePanel() {
+        JPanel profilePanel = new ProfilePanelBuilder(buttonPainter, this).createProfilePanel();
+        replaceMainContentPanel(profilePanel);
+    }
+
     private void replaceMainContentPanel(JPanel newPanel) {
         JPanel mainPanel = (JPanel) getContentPane();
         Component centerComponent = ((BorderLayout) mainPanel.getLayout()).getLayoutComponent(BorderLayout.CENTER);
@@ -91,6 +98,8 @@ public class RespiratoryManagementSystem extends JFrame {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
+
+
 }
 
 

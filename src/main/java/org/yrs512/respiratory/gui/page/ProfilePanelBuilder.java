@@ -9,14 +9,13 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- *
  * @author <a href="mailto:harvey.blocks@outlook.com">Harvey Blocks</a>
  * @version 1.0
  * @date 2025-06-11 00:14
  */ // 个人信息面板构建器类
 public class ProfilePanelBuilder {
-    private ButtonPainter buttonPainter;
-    private RespiratoryManagementSystem system;
+    private final ButtonPainter buttonPainter;
+    private final RespiratoryManagementSystem system;
 
     public ProfilePanelBuilder(ButtonPainter buttonPainter, RespiratoryManagementSystem system) {
         this.buttonPainter = buttonPainter;
@@ -24,7 +23,7 @@ public class ProfilePanelBuilder {
     }
 
     public JPanel createProfilePanel() {
-        Image profileBackground = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
+        Image profileBackground = system.getBackgroundImage();
         BackgroundPanel profilePanel = new BackgroundPanel(profileBackground);
         profilePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
